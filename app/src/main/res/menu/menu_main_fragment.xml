@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="orcaz.mymovieapp.ui.MainActivity">
+      <item android:id="@+id/action_sort"
+            android:title="@string/action_sort"
+            android:icon="@drawable/ic_sort_white_24dp"
+            app:showAsAction="ifRoom">
+            <menu>
+                  <group android:checkableBehavior="single">
+                        <item android:id="@+id/by_popularity"
+                              android:title="@string/menu_label_popularity"
+                              android:checked="true"/>
+                        <item android:id="@+id/by_rating"
+                              android:title="@string/menu_label_rating"/>
+                  </group>
+            </menu>
+    </item>
+</menu>
