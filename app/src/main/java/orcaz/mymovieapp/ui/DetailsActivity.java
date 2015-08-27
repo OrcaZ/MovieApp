@@ -2,11 +2,9 @@ package orcaz.mymovieapp.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import orcaz.mymovieapp.R;
-import orcaz.mymovieapp.data.Constants;
+import orcaz.mymovieapp.Util.Constants;
 import orcaz.mymovieapp.data.MovieInfo;
 
 public class DetailsActivity extends AppCompatActivity {

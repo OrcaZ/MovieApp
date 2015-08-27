@@ -2,7 +2,6 @@ package orcaz.mymovieapp.ui;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import orcaz.mymovieapp.R;
-import orcaz.mymovieapp.data.Constants;
+import orcaz.mymovieapp.Util.Constants;
 import orcaz.mymovieapp.data.MovieInfo;
 import orcaz.mymovieapp.net.RetrieveDetailsTask;
 
