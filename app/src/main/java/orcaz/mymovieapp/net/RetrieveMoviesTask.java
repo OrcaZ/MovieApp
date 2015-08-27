@@ -21,22 +21,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import orcaz.mymovieapp.adapter.PosterAdapter;
+import orcaz.mymovieapp.Util.Constants;
+import orcaz.mymovieapp.Util.OnMoviesRetrievedListener;
 import orcaz.mymovieapp.data.MovieInfo;
 
-/**
- * Created by OrcaZ on 2015/08/26.
- */
 public class RetrieveMoviesTask extends AsyncTask<Integer, Void, List<MovieInfo>> {
     public static final String TAG = RetrieveMoviesTask.class.getSimpleName();
 
-    private PosterAdapter mPosterAdapter;
+    private OnMoviesRetrievedListener mListener;
 
-    public static final int BY_POPULARITY = 10;
-    public static final int BY_RATING = 11;
-
-    public RetrieveMoviesTask(PosterAdapter adapter){
-        mPosterAdapter = adapter;
+    public RetrieveMoviesTask(OnMoviesRetrievedListener listener){
+        mListener = listener;
     }
 
     @Override
@@ -45,12 +40,12 @@ public class RetrieveMoviesTask extends AsyncTask<Integer, Void, List<MovieInfo>
                 .buildUpon()
                 .appendQueryParameter(NetworkConstants.API_KEY_QUERY_KEY, NetworkConstants.API_KEY);
         switch (sortBy[0]){
-            case BY_POPULARITY:
+            case Constants.BY_POPULARITY:
                 builder.appendPath(NetworkConstants.DISCOVER_PATH)
                         .appendPath(NetworkConstants.MOVIE_PATH)
                         .appendQueryParameter(NetworkConstants.SORT_BY_KEY, NetworkConstants.SORT_BY_POPULARITY);
                 break;
-            case BY_RATING:
+            case Constants.BY_RATING:
                 builder.appendPath(NetworkConstants.DISCOVER_PATH)
                         .appendPath(NetworkConstants.MOVIE_PATH)
                         .appendQueryParameter(NetworkConstants.SORT_BY_KEY, NetworkConstants.SORT_BY_RATING)
@@ -126,10 +121,7 @@ public class RetrieveMoviesTask extends AsyncTask<Integer, Void, List<MovieInfo>
     @Override
     protected void onPostExecute(List<MovieInfo> movieList) {
         super.onPostExecute(movieList);
-        if(movieList.size() > 0)
-            mPosterAdapter.update(movieList);
-        else
-            mPosterAdapter.showUpdateErrorMessage();
+        mListener.onMoviesRetrieved(movieList);
     }
 
     // Get the date of 1 year before current date in yyyy-MM-dd format to limit query by rating to last year
