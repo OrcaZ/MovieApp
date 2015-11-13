@@ -9,4 +9,11 @@
     <string name="menu_label_rating">Rating</string>
 
     <string name="desc_poster_image_view">Poster</string>
+    <string name="title_activity_test">TestActivity</string>
+
+    <string name="show_more_label">SHOW MORE</string>
+    <string name="show_less_label">SHOW LESS</string>
+    <string name="action_set_favorite">Set As Favorite</string>
+    <string name="menu_label_favorite">Favorite</string>
+    <string name="action_share">Share</string>
 </resources>

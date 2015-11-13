@@ -14,19 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import orcaz.mymovieapp.R;
-import orcaz.mymovieapp.Util.Constants;
-import orcaz.mymovieapp.data.MovieInfo;
+import orcaz.mymovieapp.data.Movie;
 import orcaz.mymovieapp.ui.DetailsActivity;
+import orcaz.mymovieapp.util.Constants;
 
+/**
+ * Adapter for MainActivity recycler view showing posters.
+ */
 public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterViewHolder> {
     public static final String TAG = PosterAdapter.class.getSimpleName();
 
     private Context mContext;
-    private List<MovieInfo> mMovieList;
+    private List<Movie> mMovieList;
 
-    public PosterAdapter(Context context){
+    public PosterAdapter(Context context) {
+        setHasStableIds(true);
         mContext = context;
         mMovieList = new ArrayList<>();
+    }
+
+    @Override
+    public int getItemCount() {
+        return mMovieList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mMovieList.get(position).id;
     }
 
     @Override
@@ -40,31 +54,29 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterView
         viewHolder.bindViewHolder(i);
     }
 
-    public List<MovieInfo> getMovieList(){
+    public List<Movie> getMovieList() {
         return mMovieList;
     }
 
-    public void update(List<MovieInfo> movies){
-        mMovieList.clear();
-        mMovieList.addAll(movies);
-        notifyDataSetChanged();
+    public void update(List<Movie> movies) {
+        if (movies != null) {
+            mMovieList.clear();
+            mMovieList.addAll(movies);
+            notifyDataSetChanged();
+        }
     }
 
-    @Override
-    public int getItemCount() {
-        return mMovieList.size();
-    }
-
-    public class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mImageView;
+
         public PosterViewHolder(View itemView) {
             super(itemView);
-            mImageView = (ImageView)itemView.findViewById(R.id.poster_image_view);
+            mImageView = (ImageView) itemView.findViewById(R.id.poster_image_view);
             itemView.setOnClickListener(this);
         }
 
-        public void bindViewHolder(int i){
-            Picasso.with(mContext).load(mMovieList.get(i).mPosterUri).into(mImageView);
+        public void bindViewHolder(int i) {
+            Picasso.with(mContext).load(mMovieList.get(i).poster_path).into(mImageView);
         }
 
         @Override

@@ -1,7 +1,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="learning.movie.ui.DetailsActivityFragment">
@@ -13,7 +13,7 @@
         <android.support.v7.widget.CardView
             android:id="@+id/movie_info_view"
             style="@style/AppCardViewStyle"
-            card_view:cardCornerRadius="4dp"
+            app:cardCornerRadius="4dp"
             android:layout_marginTop="8dp">
             <LinearLayout
                 android:orientation="vertical"
@@ -79,36 +79,9 @@
         <android.support.v7.widget.CardView
             android:id="@+id/movie_trailer_view"
             style="@style/AppCardViewStyle"
-            card_view:cardCornerRadius="4dp">
+            app:cardCornerRadius="4dp">
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-                <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="64dp"
-                    android:padding="4dp"
-                    android:src="@android:color/darker_gray"/>
-                <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="64dp"
-                    android:padding="4dp"
-                    android:src="@android:color/darker_gray"/>
-                <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="64dp"
-                    android:padding="4dp"
-                    android:src="@android:color/darker_gray"/>
-
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <!--Reviews Placeholder-->
-        <android.support.v7.widget.CardView
-            android:id="@+id/movie_review_view"
-            style="@style/AppCardViewStyle"
-            card_view:cardCornerRadius="4dp">
-            <LinearLayout
+                android:id="@+id/trailer_container"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,11 +89,47 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reviewer1:"/>
+                    android:text="Trailers"/>
+                <LinearLayout
+                    android:id="@+id/trailer_list_item_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/movie_review_view"
+            android:animateLayoutChanges="true"
+            style="@style/AppCardViewStyle"
+            app:cardCornerRadius="4dp">
+            <LinearLayout
+                android:id="@+id/review_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Placeholder review"/>
+                    android:text="Reviews"/>
+                <LinearLayout
+                    android:id="@+id/review_list_item_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>

@@ -13,6 +13,8 @@
                               android:checked="true"/>
                         <item android:id="@+id/by_rating"
                               android:title="@string/menu_label_rating"/>
+                        <item android:id="@+id/show_favorite"
+                              android:title="@string/menu_label_favorite"/>
                   </group>
             </menu>
     </item>
