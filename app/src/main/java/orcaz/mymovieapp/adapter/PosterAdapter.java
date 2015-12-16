@@ -21,15 +21,17 @@ import orcaz.mymovieapp.util.Constants;
 /**
  * Adapter for MainActivity recycler view showing posters.
  */
-public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterViewHolder> {
+public class PosterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String TAG = PosterAdapter.class.getSimpleName();
 
     private Context mContext;
     private List<Movie> mMovieList;
+    private OnMovieSelectedListener mListener;
 
-    public PosterAdapter(Context context) {
+    public PosterAdapter(Context context, OnMovieSelectedListener listener) {
         setHasStableIds(true);
         mContext = context;
+        mListener = listener;
         mMovieList = new ArrayList<>();
     }
 
@@ -40,18 +42,21 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterView
 
     @Override
     public long getItemId(int position) {
-        return mMovieList.get(position).id;
+        if(mMovieList.isEmpty())
+            return -1;
+        else
+            return mMovieList.get(position).id;
     }
 
     @Override
-    public PosterAdapter.PosterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_view_poster, viewGroup, false);
         return new PosterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PosterAdapter.PosterViewHolder viewHolder, int i) {
-        viewHolder.bindViewHolder(i);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+        ((PosterViewHolder)viewHolder).bindViewHolder(i);
     }
 
     public List<Movie> getMovieList() {
@@ -62,6 +67,9 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterView
         if (movies != null) {
             mMovieList.clear();
             mMovieList.addAll(movies);
+            notifyDataSetChanged();
+        }else{
+            mMovieList.clear();
             notifyDataSetChanged();
         }
     }
@@ -81,9 +89,7 @@ public class PosterAdapter extends RecyclerView.Adapter<PosterAdapter.PosterView
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, DetailsActivity.class);
-            intent.putExtra(Constants.MOVIE_DATA, mMovieList.get(getAdapterPosition()));
-            mContext.startActivity(intent);
+            mListener.onMovieSelected(mMovieList.get(getAdapterPosition()));
         }
     }
 }

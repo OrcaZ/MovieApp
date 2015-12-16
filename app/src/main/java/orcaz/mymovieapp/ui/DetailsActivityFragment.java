@@ -14,8 +14,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,17 +85,8 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-        TextView titleTextView = (TextView) view.findViewById(R.id.movie_title_text_view);
-        TextView releaseDateTextView = (TextView) view.findViewById(R.id.release_date_text_view);
-        TextView ratingTextView = (TextView) view.findViewById(R.id.rating_text_view);
-        TextView overviewTextView = (TextView) view.findViewById(R.id.overview_text_view);
-        mPosterImageView = (ImageView) view.findViewById(R.id.poster_image_view);
-        mReviewContainer = (LinearLayout) view.findViewById(R.id.review_container);
-        mReviewListItemContainer = (LinearLayout) mReviewContainer.findViewById(R.id.review_list_item_container);
-        mTrailerContainer = (LinearLayout) view.findViewById(R.id.trailer_container);
-        mTrailerListItemContainer = (LinearLayout) mTrailerContainer.findViewById(R.id.trailer_list_item_container);
 
-        mMovie = getArguments().getParcelable(Constants.MOVIE_DATA);
+                mMovie = getArguments().getParcelable(Constants.MOVIE_DATA);
         if (mMovie != null) {
             if(Util.IsInternetAvailable(getActivity())){
                 Log.i(TAG, "Loading from tmdb");
@@ -116,9 +109,24 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
                 mTrailerResponseCallback.failure(null);
                 mReviewResponseCallback.failure(null);
             }
+        }else{
+            view.findViewById(R.id.movie_scroll_view).setVisibility(View.GONE);
+            view.findViewById(R.id.detail_empty_text_view).setVisibility(View.VISIBLE);
+            setHasOptionsMenu(false);
         }
 
         if (mMovie != null) {
+            TextView titleTextView = (TextView) view.findViewById(R.id.movie_title_text_view);
+            TextView releaseDateTextView = (TextView) view.findViewById(R.id.release_date_text_view);
+            TextView ratingTextView = (TextView) view.findViewById(R.id.rating_text_view);
+            TextView overviewTextView = (TextView) view.findViewById(R.id.overview_text_view);
+            mPosterImageView = (ImageView) view.findViewById(R.id.poster_image_view);
+            mPosterImageView.setVisibility(View.VISIBLE);
+            mReviewContainer = (LinearLayout) view.findViewById(R.id.review_container);
+            mReviewListItemContainer = (LinearLayout) mReviewContainer.findViewById(R.id.review_list_item_container);
+            mTrailerContainer = (LinearLayout) view.findViewById(R.id.trailer_container);
+            mTrailerListItemContainer = (LinearLayout) mTrailerContainer.findViewById(R.id.trailer_list_item_container);
+
             titleTextView.setText(mMovie.original_title);
             releaseDateTextView.setText(mMovie.release_date);
             ratingTextView.setText(mMovie.vote_average + "/10");
@@ -136,6 +144,9 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
             menu.findItem(R.id.action_set_favorite).setIcon(R.drawable.ic_favorite_white_24dp);
         }
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+        if(mTrailerResponse != null && !mTrailerResponse.results.isEmpty()) {
+            mShareActionProvider.setShareIntent(getShareIntent(mTrailerResponse.results.get(0).key));
+        }
         Log.i(TAG, "In onCreateOptionsMenu, mShareACtionProvider is null: " + (mShareActionProvider == null));
     }
 
@@ -234,7 +245,9 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
             mTrailerListItemContainer.removeViewAt(0);
             if(mTrailerResponse.results != null && mTrailerResponse.results.size() > 0){
                 Log.i(TAG, "In success, mShareACtionProvider is null: " + (mShareActionProvider == null));
-                mShareActionProvider.setShareIntent(getShareIntent(mTrailerResponse.results.get(0).key));
+                if(mShareActionProvider != null) {
+                    mShareActionProvider.setShareIntent(getShareIntent(mTrailerResponse.results.get(0).key));
+                }
                 loadTrailer(mTrailerResponse.results.get(0), new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {

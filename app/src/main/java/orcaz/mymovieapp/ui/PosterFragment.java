@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import orcaz.mymovieapp.R;
+import orcaz.mymovieapp.adapter.OnMovieSelectedListener;
 import orcaz.mymovieapp.util.Constants;
 import orcaz.mymovieapp.util.Util;
 import orcaz.mymovieapp.adapter.PosterAdapter;
@@ -35,13 +37,16 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivityFragment extends Fragment implements Callback<MovieResponse>, LoaderManager.LoaderCallbacks<Cursor> {
-    public static final String TAG = MainActivityFragment.class.getSimpleName();
+public class PosterFragment extends Fragment implements Callback<MovieResponse>, LoaderManager.LoaderCallbacks<Cursor>{
+    public static final String TAG = PosterFragment.class.getSimpleName();
     private static final int MOVIE_LOADER = 0;
 
     private PosterAdapter mPosterAdapter;
+    private RecyclerView mPosterView;
+    private TextView mEmptyView;
+    private int mPosterColumns = 2;
 
-    public MainActivityFragment() {
+    public PosterFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -52,9 +57,16 @@ public class MainActivityFragment extends Fragment implements Callback<MovieResp
             Toast.makeText(getActivity(), "Internet Currently Not Available. Showing Favorite Movies Only.", Toast.LENGTH_LONG).show();
             Util.setSortBySetting(getActivity(), Constants.SHOW_FAVORITE);
         }
-        mPosterAdapter = new PosterAdapter(getActivity());
+        mPosterAdapter = new PosterAdapter(getActivity(), (OnMovieSelectedListener)getActivity());
         if (savedInstanceState != null) {
-            mPosterAdapter.update(savedInstanceState.<Movie>getParcelableArrayList(Constants.MOVIE_DATA));
+            List<Movie> movieList = savedInstanceState.<Movie>getParcelableArrayList(Constants.MOVIE_DATA);
+            if(movieList != null) {
+                mPosterAdapter.update(movieList);
+            }else {
+                mPosterAdapter.update(null);
+                mPosterView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
         } else {
             retrieveMovies();
         }
@@ -63,10 +75,11 @@ public class MainActivityFragment extends Fragment implements Callback<MovieResp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.poster_recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        recyclerView.setAdapter(mPosterAdapter);
+        View view = inflater.inflate(R.layout.fragment_poster, container, false);
+        mPosterView = (RecyclerView) view.findViewById(R.id.poster_recycler_view);
+        mPosterView.setLayoutManager(new GridLayoutManager(getActivity(), mPosterColumns));
+        mPosterView.setAdapter(mPosterAdapter);
+        mEmptyView = (TextView) view.findViewById(R.id.poster_empty_text_view);
         return view;
     }
 
@@ -145,14 +158,23 @@ public class MainActivityFragment extends Fragment implements Callback<MovieResp
             for (Movie movie : movieResponse.results) {
                 movie.poster_path = NetworkConstants.IMG_URL + movie.poster_path;
             }
+            if(mPosterView.getVisibility() != View.VISIBLE){
+                mPosterView.setVisibility(View.VISIBLE);
+                mEmptyView.setVisibility(View.GONE);
+            }
             mPosterAdapter.update(movieResponse.results);
-        } else
-            Toast.makeText(getActivity(), "Error retrieving movie data. Please try again later.", Toast.LENGTH_LONG).show();
+        } else {
+            mPosterAdapter.update(null);
+            mPosterView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void failure(RetrofitError error) {
         Log.e(TAG, "Error retrieving movie data", error.getCause());
+        mPosterView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     private static final String[] projection = new String[]{
@@ -197,11 +219,20 @@ public class MainActivityFragment extends Fragment implements Callback<MovieResp
                         data.getDouble(COLUMN_VOTE_AVERAGE_INDEX)));
             }while (data.moveToNext());
             mPosterAdapter.update(movieList);
+        }else if(data.getCount() == 0) {
+            mPosterAdapter.update(null);
+            mPosterView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mPosterAdapter.update(null);
+    }
+
+    public void setPosterColumns(int cols){
+        mPosterColumns = cols;
+        ((GridLayoutManager)mPosterView.getLayoutManager()).setSpanCount(cols);
     }
 }
