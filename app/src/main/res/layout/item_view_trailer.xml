@@ -11,7 +11,8 @@
         android:layout_weight="2"
         android:scaleType="centerCrop"
         android:padding="2dp"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/desc_trailer_thumbnail"/>
 
     <TextView
         android:id="@+id/trailer_text_view"
