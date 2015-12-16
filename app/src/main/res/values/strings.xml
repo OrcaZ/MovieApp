@@ -16,4 +16,13 @@
     <string name="action_set_favorite">Set As Favorite</string>
     <string name="menu_label_favorite">Favorite</string>
     <string name="action_share">Share</string>
+
+    <string name="vote_format">%.2f/10</string>
+
+    <string name="trailer_offline">Trailer not available in offline mode.</string>
+    <string name="trailer_unavailable">No trailer available.</string>
+    <string name="trailer_error">Error retrieving trailer.</string>
+
+    <string name="review_unavailable">No review available.</string>
+    <string name="review_error">Error retrieving review.</string>
 </resources>

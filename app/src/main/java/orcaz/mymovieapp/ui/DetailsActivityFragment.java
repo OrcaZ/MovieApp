@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,10 +13,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,15 +35,14 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import orcaz.mymovieapp.R;
-import orcaz.mymovieapp.util.Constants;
-import orcaz.mymovieapp.util.Util;
 import orcaz.mymovieapp.data.Movie;
 import orcaz.mymovieapp.data.MovieDBContract;
-import orcaz.mymovieapp.data.MovieDBHelper;
 import orcaz.mymovieapp.data.ReviewResponse;
 import orcaz.mymovieapp.data.TrailerResponse;
 import orcaz.mymovieapp.net.NetworkConstants;
 import orcaz.mymovieapp.net.TMDBApi;
+import orcaz.mymovieapp.util.Constants;
+import orcaz.mymovieapp.util.Util;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -60,7 +56,6 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
     private ReviewResponse mReviewResponse;
     private TrailerResponse mTrailerResponse;
 
-    private ImageView mPosterImageView;
     private LinearLayout mReviewContainer, mReviewListItemContainer, mTrailerContainer, mTrailerListItemContainer;
     private ShareActionProvider mShareActionProvider;
 
@@ -102,7 +97,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
                 getLoaderManager().initLoader(REVIEW_LOADER, null, this);
                 mTrailerListItemContainer.removeViewAt(0);
                 TextView textView = new TextView(getActivity());
-                textView.setText("Trailers not available in offline mode.");
+                textView.setText(getString(R.string.trailer_offline));
                 mTrailerListItemContainer.addView(textView);
             }else{
                 Log.i(TAG, "Failed to load reviews and trailers.");
@@ -120,8 +115,8 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
             TextView releaseDateTextView = (TextView) view.findViewById(R.id.release_date_text_view);
             TextView ratingTextView = (TextView) view.findViewById(R.id.rating_text_view);
             TextView overviewTextView = (TextView) view.findViewById(R.id.overview_text_view);
-            mPosterImageView = (ImageView) view.findViewById(R.id.poster_image_view);
-            mPosterImageView.setVisibility(View.VISIBLE);
+            ImageView posterImageView = (ImageView) view.findViewById(R.id.poster_image_view);
+            posterImageView.setVisibility(View.VISIBLE);
             mReviewContainer = (LinearLayout) view.findViewById(R.id.review_container);
             mReviewListItemContainer = (LinearLayout) mReviewContainer.findViewById(R.id.review_list_item_container);
             mTrailerContainer = (LinearLayout) view.findViewById(R.id.trailer_container);
@@ -129,9 +124,9 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
 
             titleTextView.setText(mMovie.original_title);
             releaseDateTextView.setText(mMovie.release_date);
-            ratingTextView.setText(mMovie.vote_average + "/10");
+            ratingTextView.setText(getString(R.string.vote_format, mMovie.vote_average));
             overviewTextView.setText(mMovie.overview);
-            Picasso.with(getActivity()).load(mMovie.poster_path).into(mPosterImageView);
+            Picasso.with(getActivity()).load(mMovie.poster_path).into(posterImageView);
         }
         return view;
     }
@@ -307,7 +302,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
                 });
             }else{
                 TextView textView = new TextView(getActivity());
-                textView.setText("No trailer available.");
+                textView.setText(getString(R.string.trailer_unavailable));
             }
 
         }
@@ -316,7 +311,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
         public void failure(RetrofitError error) {
             mTrailerListItemContainer.removeViewAt(0);
             TextView textView = new TextView(getActivity());
-            textView.setText("Error retrieving trailers.");
+            textView.setText(getString(R.string.trailer_error));
             mTrailerListItemContainer.addView(textView);
         }
     };
@@ -385,7 +380,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
                 });
             }else{
                 TextView textView = new TextView(getActivity());
-                textView.setText("No review available.");
+                textView.setText(getString(R.string.review_unavailable));
                 mReviewListItemContainer.addView(textView);
                 mReviewListItemContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 mReviewListItemContainer.requestLayout();
@@ -396,7 +391,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
         public void failure(RetrofitError error) {
             mReviewListItemContainer.removeViewAt(0);
             TextView textView = new TextView(getActivity());
-            textView.setText("Error retrieving reviews.");
+            textView.setText(getString(R.string.review_error));
             mReviewListItemContainer.addView(textView);
             mReviewListItemContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
             mReviewListItemContainer.requestLayout();
@@ -405,7 +400,7 @@ public class DetailsActivityFragment extends Fragment implements LoaderManager.L
 
     private void loadReview(ReviewResponse.Review review) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.item_view_review, mReviewListItemContainer, false);
-        ((TextView) view.findViewById(R.id.reviewer_text_view)).setText(review.author + ": ");
+        ((TextView) view.findViewById(R.id.reviewer_text_view)).setText(review.author);
         ((TextView) view.findViewById(R.id.review_text_view)).setText(review.content);
         mReviewListItemContainer.addView(view);
     }
