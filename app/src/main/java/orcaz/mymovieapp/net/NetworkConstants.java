@@ -2,7 +2,7 @@ package orcaz.mymovieapp.net;
 
 public class NetworkConstants {
     // Please insert TMDB api key here
-    public static final String API_KEY = "1e5ad415e9df0a99db1ab71d6d84d7e4";
+    public static final String API_KEY = "----------API key here----------";
     public static final String BASE_URL = "http://api.themoviedb.org/3";
     public static final String MOVIE_QUERY_PATH = "/discover/movie";
     public static final String ID_PATH = "id";
