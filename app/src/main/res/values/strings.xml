@@ -25,4 +25,12 @@
 
     <string name="review_unavailable">No review available.</string>
     <string name="review_error">Error retrieving review.</string>
+
+    <string name="empty_detail">Please select a movie from the left.</string>
+    <string name="desc_info_divider_image_view">divider</string>
+    <string name="trailer_view_title">Trailers</string>
+    <string name="review_view_title">Reviews</string>
+    <string name="empty_poster">Movie list is empty.</string>
+    <string name="desc_expand_button">Show more/less</string>
+    <string name="desc_trailer_thumbnail">Trailer thumbnail.</string>
 </resources>

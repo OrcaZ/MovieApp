@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="Movie list is empty."/>
+        android:text="@string/empty_poster"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/poster_recycler_view"
         android:layout_width="match_parent"

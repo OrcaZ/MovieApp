@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="Please select a movie from the left."/>
+        android:text="@string/empty_detail"/>
     <ScrollView
         android:id="@+id/movie_scroll_view"
         android:layout_width="match_parent"
@@ -42,6 +42,9 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="24dp"
                             android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
                             android:paddingBottom="16dp"
                             android:layout_weight="1">
                             <TextView
@@ -70,14 +73,16 @@
                             android:layout_weight="1"
                             android:layout_gravity="center_vertical"
                             android:adjustViewBounds="true"
-                            android:padding="16dp"/>
+                            android:padding="16dp"
+                            android:contentDescription="@string/desc_poster_image_view"/>
                     </LinearLayout>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:src="#aacccccc"
                         android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"/>
+                        android:layout_marginRight="16dp"
+                        android:contentDescription="@string/desc_info_divider_image_view"/>
                     <TextView
                         android:id="@+id/overview_text_view"
                         android:layout_width="match_parent"
@@ -101,7 +106,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Trailers"/>
+                        android:text="@string/trailer_view_title"/>
                     <LinearLayout
                         android:id="@+id/trailer_list_item_container"
                         android:orientation="vertical"
@@ -130,7 +135,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reviews"/>
+                        android:text="@string/review_view_title"/>
                     <LinearLayout
                         android:id="@+id/review_list_item_container"
                         android:orientation="vertical"
